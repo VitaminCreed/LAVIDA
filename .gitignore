@@ -1,0 +1,12 @@
+# 忽略 macOS 系统文件
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# 忽略常见 IDE 配置
+.vscode/
+.idea/
+
+# 忽略 Python 缓存（如果是 Python 项目）
+__pycache__/
+*.py[cod]
