@@ -1,0 +1,132 @@
+data:
+  train_sets: ["vos", "refvos", "mevis", "refdavis", "cityspace", 'coco', 'ade20k', 'mapillary'] 
+  sampling_ratios: 
+    vos: 0.05
+    refvos: 0.2
+    mevis: 0.25
+    refdavis: 0.2
+    cityspace: 0.05
+    coco: 0.1
+    ade20k: 0.1
+    mapillary: 0.05
+  anomaly_ratio: 0.5
+  test_sets: ["shanghaitech"]  # shanghaitech /ubnormal / ucfcrime / xdviolence / ucsdped 
+  
+  dataset_args:
+    ubnormal_args:
+      data_root: "<PATH>/datasets/UBnormal"
+      sample_interval: 4
+    shanghaitech_args:
+      data_root: "<PATH>/datasets/shanghaitech"
+      sample_interval: 2
+    ucfcrime_args:
+      data_root: "<PATH>/datasets/UCF-Crime"
+      sample_interval: 128
+    xdviolence_args:
+      data_root: "<PATH>/datasets/XD-Violence"
+      sample_interval: 128
+    ucsdped_args:
+      data_root: "<PATH>/datasets/UCSD_Anomaly_Dataset.v1p2"
+      sample_interval: 1
+    vos_args:
+      data_root: "<PATH>/datasets/YouTube-VOS"
+      n_anomalies: 30
+    refvos_args:
+      data_root: "<PATH>/datasets/Ref-YoutubeVOS"
+      exp_meta_path: "<PATH>/datasets/Ref-YoutubeVOS/meta_expressions/train/meta_expressions.json"
+      n_anomalies: 30
+    mevis_args:
+      data_root: "<PATH>/datasets/MeVis"
+      n_anomalies: 30
+    refdavis_args:
+      data_root: "<PATH>/datasets/RefDavis/train"
+      anno_file_path: "<PATH>/datasets/RefDavis/meta_expressions/train/meta_expressions.json"
+      n_anomalies: 30
+    ade20k_args:
+      data_root: "<PATH>/datasets/ADE20K"
+      n_anomalies: 30
+    mapillary_args:
+      data_root: "<PATH>/datasets/Mapillary"
+      n_anomalies: 20
+    cityspace_args:
+      data_root: "<PATH>/datasets/CitySpace"
+      n_anomalies: 6
+    coco_args:
+      data_root: "<PATH>/datasets/Coco"
+      data_list: ["refclef", "refcoco", "refcoco+", "refcocog"]
+      n_anomalies: 30
+
+
+  list_root: "./lists/"
+  ubnormal_list_root: "./lists/UBnormal"
+  total_sampled_frames: 8
+  frames_between_clip: 8
+  llm_sample_frames: 8
+  image_size: 1024   
+  train_anomaly_video_only: true
+
+model:
+  sam2_checkpoint: "<PATH>/LLM_ckpt/SAM2/sam2.1_hiera_small.pt" #  "<PATH>/LLM_ckpt/SAM2/sam2.1_hiera_base_plus.pt"
+  sam2_cfg:  "configs/sam2.1/sam2.1_hiera_s.yaml" # "configs/sam2.1/sam2.1_hiera_b+.yaml"
+  clip_path: "<PATH>/LLM_ckpt/clip-vit-base-patch32"
+  model_path: "<PATH>/LLM_ckpt/Qwen2-VL-7B-Instruct"
+  device: "cuda"
+  n_qformer_layers: 5
+  n_qformer_queries: 48
+  adapter_dim: 768 
+  reduction_ratio: 0.5
+  lof_k: 8
+
+
+training:
+  epochs: 8
+  steps_per_epoch: 2000
+  batch_size: 2
+  random_seed: 44
+  lora_r: 8
+  load_in_8bit: False
+  load_in_4bit: False
+  log_base_dir: "./log"
+  ckpt_path: "./ckpt"
+  exp_name: "lavida"
+  grad_accumulation_steps: 2
+  val_batch_size: 1
+  workers: 10
+  lr: 1e-5
+  weight_decay: 1e-5
+  lora_alpha: 16
+  lora_dropout: 0.05
+  lora_target_modules: "q_proj,v_proj"
+  explanatory: 0.1
+  beta1: 0.9
+  beta2: 0.95
+  out_dim: 256
+  resume: ""
+  print_freq: 200
+  start_epoch: 0
+  gradient_checkpointing: True
+  train_mask_decoder: True
+  auto_resume: True
+  ckpt_path: "./ckpt/checkpoint.pt"
+  log_path: "./log/train.log"
+  resume: ""
+  precision: "bf16"
+  local_rank: 0
+  no_eval: False
+  eval_only: False
+  eval_pixel: False
+
+loss:
+  ce_loss_weight: 1.0
+  weight_dict:
+    loss_mask: 20
+    loss_dice: 2
+    loss_iou: 1
+    loss_class: 2
+  supervise_all_iou: true
+  iou_use_l1_loss: true
+  pred_obj_scores: true
+  focal_gamma_obj_score: 0.0
+  focal_alpha_obj_score: -1.0
+
+  
