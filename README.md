@@ -26,10 +26,10 @@ Extensive experiments show that our method achieves state-of-the-art zero-shot p
 - [ ] Add instructions for dataset preparation.
 - [ ] Provide usage instructions.
 
-## 🛠️ Installation
+## 🛠️ Data Preparation
 *(Wait for further updates)*
 
-## 🚀 Usage
+## 🚀 Running
 *(Wait for further updates)*
 
 ## ✉️ Citation
